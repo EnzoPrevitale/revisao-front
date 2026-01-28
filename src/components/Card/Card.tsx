@@ -4,6 +4,7 @@ interface Props {
     author: string;
     publisher: string;
     year: number;
+    isbn: number;
 }
 
 // Este componente deve retornar os dados do livro em um card
@@ -13,6 +14,7 @@ export default function Card(props: Props) {
             <img src={props.imageUrl} />
             <p>{props.title}</p>
             <p>{props.author}</p>
+            <button>{"<3"}</button>
         </div>
     );
 }
