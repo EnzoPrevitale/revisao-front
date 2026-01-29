@@ -50,7 +50,6 @@ class BookController(private val repository: BookRepository) {
         return repository.findById(id).map { book ->
             if (!dto.title.isNullOrEmpty()) book.title = dto.title
             if (!dto.imageUrl.isNullOrEmpty()) book.imageUrl = dto.imageUrl
-            if (!dto.author.isNullOrEmpty()) book.author = dto.author
             if (!dto.publisher.isNullOrEmpty()) book.publisher = dto.publisher
             if (dto.year != null) book.year = dto.year
             if (!dto.isbn.isNullOrEmpty()) book.isbn = dto.isbn

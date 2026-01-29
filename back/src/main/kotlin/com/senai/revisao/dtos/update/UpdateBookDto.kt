@@ -5,6 +5,6 @@ data class UpdateBookDto(
     val imageUrl: String?,
     val author: String?,
     val publisher: String?,
-    val year: Integer?,
+    val year: Int?,
     val isbn: String?
 )

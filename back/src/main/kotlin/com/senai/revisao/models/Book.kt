@@ -1,14 +1,17 @@
 package com.senai.revisao.models
 
+import org.springframework.data.annotation.Id
 import org.springframework.data.mongodb.core.mapping.Document
+import org.springframework.data.mongodb.core.index.Indexed
 
-@Document("livros")
+
+@Document("books")
 data class Book(
-    val id: String? = null,
+    @Id val id: String? = null,
     var title: String,
-    var imageUrl: String,
-    var author: String,
+    var imageUrl: String?,
     var publisher: String,
-    var year: Integer,
-    var isbn: String
-)
+    var year: Int,
+    @Indexed(unique = true) var isbn: String,
+    var authors: MutableList<Author>
+    )
