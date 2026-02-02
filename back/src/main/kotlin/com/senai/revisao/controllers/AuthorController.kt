@@ -1,10 +1,6 @@
 package com.senai.revisao.controllers
 
-import com.senai.revisao.dtos.create.BookDto
-import com.senai.revisao.dtos.update.UpdateBookDto
-import com.senai.revisao.models.Book
-import com.senai.revisao.repositories.BookRepository
-import com.senai.revisao.services.BookService
+import com.senai.revisao.models.Author
 import org.springframework.http.HttpStatus
 import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.DeleteMapping
@@ -17,31 +13,31 @@ import org.springframework.web.bind.annotation.RequestMapping
 import org.springframework.web.bind.annotation.RestController
 
 @RestController
-@RequestMapping("/books")
-class BookController(private val service: BookService) {
+@RequestMapping("/author")
+class AuthorController(private val service: AuthorService) {
 
     @GetMapping
-    fun getAll(): ResponseEntity<List<Book>> {
+    fun getAll(): ResponseEntity<List<Author>> {
         return ResponseEntity.ok(service.readAll())
     }
 
     @GetMapping("/{id}")
-    fun get(@PathVariable id: String): ResponseEntity<Book> {
+    fun get(@PathVariable id: String): ResponseEntity<Author> {
         return service.readOne(id)
-            .map { book -> ResponseEntity.ok(book) }
+            .map { author -> ResponseEntity.ok(author) }
             .orElseGet { ResponseEntity.notFound().build() }
     }
 
     @PostMapping
-    fun post(@RequestBody dto: BookDto): ResponseEntity<Book> {
+    fun post(@RequestBody dto: AuthorDto): ResponseEntity<Author> {
 
         return ResponseEntity.status(HttpStatus.CREATED).body(service.create(dto))
     }
 
     @PatchMapping("/{id}")
-    fun patch(@PathVariable id: String, @RequestBody dto: UpdateBookDto): ResponseEntity<Book> {
+    fun patch(@PathVariable id: String, @RequestBody dto: UpdateAuthorDto): ResponseEntity<Author> {
         return service.update(id, dto)
-            .map { book -> ResponseEntity.status(HttpStatus.ACCEPTED).body(book) }
+            .map { author -> ResponseEntity.status(HttpStatus.ACCEPTED).body(author) }
             .orElseGet { ResponseEntity.notFound().build() }
     }
 

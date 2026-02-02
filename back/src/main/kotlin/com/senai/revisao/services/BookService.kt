@@ -16,16 +16,16 @@ import java.util.Optional
 class BookService(private val repository: BookRepository,
                         private val authorRepository: AuthorRepository) {
 
-    fun getAll(): List<Book> {
+    fun readAll(): List<Book> {
         return repository.findAll()
     }
 
-    fun getOne(id: String): Optional<Book> {
+    fun readOne(id: String): Optional<Book> {
         return repository.findById(id)
     }
 
     fun create(dto: BookDto): Book {
-        val book: Book = Book(
+        val book = Book(
             title = dto.title,
             imageUrl = dto.imageUrl,
             publisher = dto.publisher,
@@ -45,7 +45,32 @@ class BookService(private val repository: BookRepository,
         return book
     }
 
-    fun update(id: String, dto: UpdateBookDto) {
+    fun update(id: String, dto: UpdateBookDto): Optional<Book> {
+        return repository.findById(id)
+            .map { book ->
+                if(!dto.title.isNullOrEmpty()) book.title = dto.title
+                if(!dto.imageUrl.isNullOrEmpty()) book.imageUrl = dto.imageUrl
+                if(!dto.publisher.isNullOrEmpty()) book.publisher = dto.publisher
+                if(dto.year != null) book.year = dto.year
+                if(!dto.isbn.isNullOrEmpty()) book.isbn = dto.isbn
+                if (dto.authorsIds.isNotEmpty()) {
+                    dto.authorsIds.forEach { id ->
+                        authorRepository.findById(id)
+                            .map { author -> book.authors.add(author)}
+                            .orElseThrow{ ResponseStatusException(HttpStatus.BAD_REQUEST) }
+                    }
+                }
 
+                return@map book
+            }
+    }
+
+    fun delete(id: String): Optional<Book> {
+        val book = repository.findById(id)
+        return book
+            .map { book ->
+                repository.delete(book)
+                return@map book
+            }
     }
 }
