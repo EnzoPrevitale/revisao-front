@@ -6,5 +6,5 @@ data class UpdateBookDto(
     val publisher: String?,
     val year: Int?,
     val isbn: String?,
-    val authorsIds: List<String>
+    val authors: MutableList<String>
 )

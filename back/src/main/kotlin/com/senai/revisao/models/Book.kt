@@ -13,5 +13,5 @@ data class Book(
     var publisher: String,
     var year: Int,
     @Indexed(unique = true) var isbn: String,
-    var authors: MutableList<Author>
+    var authors: MutableList<String>
     )

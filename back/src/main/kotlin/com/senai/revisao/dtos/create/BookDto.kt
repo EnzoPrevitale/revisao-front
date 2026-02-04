@@ -6,5 +6,5 @@ data class BookDto(
     val publisher: String,
     val year: Int,
     val isbn: String,
-    val authorsIds: MutableList<String>
+    val authors: MutableList<String>
 )

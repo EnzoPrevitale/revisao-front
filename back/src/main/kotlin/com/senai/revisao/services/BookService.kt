@@ -2,9 +2,7 @@ package com.senai.revisao.services
 
 import com.senai.revisao.dtos.create.BookDto
 import com.senai.revisao.dtos.update.UpdateBookDto
-import com.senai.revisao.models.Author
 import com.senai.revisao.models.Book
-import com.senai.revisao.repositories.AuthorRepository
 import com.senai.revisao.repositories.BookRepository
 import org.springframework.http.HttpStatus
 import org.springframework.stereotype.Service
@@ -13,8 +11,7 @@ import java.util.ArrayList
 import java.util.Optional
 
 @Service
-class BookService(private val repository: BookRepository,
-                        private val authorRepository: AuthorRepository) {
+class BookService(private val repository: BookRepository) {
 
     fun readAll(): List<Book> {
         return repository.findAll()
@@ -31,18 +28,14 @@ class BookService(private val repository: BookRepository,
             publisher = dto.publisher,
             year = dto.year,
             isbn = dto.isbn,
-            authors = ArrayList<Author>()
+            authors = ArrayList<String>()
         )
 
-        if (dto.authorsIds.isNotEmpty()) {
-            dto.authorsIds.forEach { id ->
-                authorRepository.findById(id)
-                    .map { author -> book.authors.add(author)}
-                    .orElseThrow{ ResponseStatusException(HttpStatus.BAD_REQUEST) }
-            }
+        if (dto.authors.isNotEmpty()) {
+            dto.authors.forEach { author -> book.authors.add(author) }
         }
 
-        return book
+        return repository.save(book)
     }
 
     fun update(id: String, dto: UpdateBookDto): Optional<Book> {
@@ -53,15 +46,9 @@ class BookService(private val repository: BookRepository,
                 if(!dto.publisher.isNullOrEmpty()) book.publisher = dto.publisher
                 if(dto.year != null) book.year = dto.year
                 if(!dto.isbn.isNullOrEmpty()) book.isbn = dto.isbn
-                if (dto.authorsIds.isNotEmpty()) {
-                    dto.authorsIds.forEach { id ->
-                        authorRepository.findById(id)
-                            .map { author -> book.authors.add(author)}
-                            .orElseThrow{ ResponseStatusException(HttpStatus.BAD_REQUEST) }
-                    }
-                }
+                if (dto.authors.isNotEmpty()) book.authors = dto.authors
 
-                return@map book
+                return@map repository.save(book)
             }
     }
 
