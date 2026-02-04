@@ -5,18 +5,33 @@ html, body {
 }
 
 #home {
-    display: flex;
-    gap: 10px;
-    justify-content: center;
-    margin-top: 10px;
+    overflow: hidden;
+    font-family: Arial, Helvetica, sans-serif;
+    padding: 10px;
+}
+
+.books {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: 50px;
+    padding: 24px;
 }
 
 .bookCard {
-    background-color: #f0f0f0;
+    background-color: #fafafa;
     padding: 20px;
     border-radius: 10px;
+    text-align: center;
 }
 
 .bookCard > button {
-    background-color: red;
+    background-color: black;
+    border: none;
+    border-radius: 100%;
+    padding: 5px;
+}
+
+.bookCard > img {
+    width: 100px;
+    text-align: center;
 }

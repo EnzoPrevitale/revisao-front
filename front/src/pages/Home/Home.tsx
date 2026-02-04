@@ -1,23 +1,36 @@
 import Card from "../../components/Card/Card"
+import api from "../../api"
+import { useEffect, useState } from "react"
+import type { Book } from "../../book"
+import { getFavorites } from "../../favorites";
 
 export default function Home() {
 
-    const mock = [
-        {
-            title: "Assim Falava Zaratustra",
-            imageUrl: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQ1iA8TYp9TXppLSsnjCs-EUNDv7DyucIt0-Q&s",
-            author: "Friedrich Nietzche",
-            publisher: "Veríssimo",
-            year: 1883,
-            isbn: 9893895031142
-        },
-        
-    ]
+    const [ response, setResponse ] = useState<Array<Book>>([]);
+    const [favorites, setFavorites] = useState(0);
+
+    useEffect(() => {
+        api.get("/books")
+            .then(d => setResponse(d.data))
+            .catch(e => console.error('Erro', e));
+    }, []);
+
+    useEffect(() => {
+        setFavorites(getFavorites().length);
+    }, [getFavorites()]);
 
     // Retorna cards com todos os livros
     return (
         <section id="home">
-            {mock.map((book) => <Card title={book.title} imageUrl={book.imageUrl} author={book.author} publisher={book.publisher} year={book.year} isbn={book.isbn} />)}
+            <h1>Catálogo de Livros</h1>
+            <h2>Favoritados: {favorites}</h2>
+            <div className="books">
+                {
+                    response.map(b => 
+                        <Card key={b.id} id={b.id} title={b.title} imageUrl={b.imageUrl} publisher={b.publisher} year={b.year} isbn={b.isbn} authors={b.authors} />
+                    )
+                }
+            </div>
         </section>
     )
 }
